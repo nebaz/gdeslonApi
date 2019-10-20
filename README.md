@@ -5,7 +5,7 @@
 To use the library, install it through [npm](https://npmjs.com)
 
 ```shell
-npm install --save gdeslonApi
+npm install --save gdeslonapi
 ```
 
 ## Get API tokens
