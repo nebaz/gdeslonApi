@@ -13,7 +13,7 @@ npm install --save gdeslonapi
 * https://www.gdeslon.ru/api_settings/xml - for get links
 
 ## Usage
-    const GdeslonApi = require('gdeslonApi');
+    const GdeslonApi = require('gdeslonapi');
     const api = new GdeslonApi(wmId, ordersApiToken, linksApiToken);
     let links = await api.getOfferLinksByOfferId();
 
