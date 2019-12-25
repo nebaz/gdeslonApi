@@ -8,12 +8,6 @@ const STATUS_HOLD = 'hold';
 const STATUS_APPROVED = 'approved';
 const STATUS_PAID = 'paid';
 
-Date.prototype.yyyymmdd = function () {
-  let mm = this.getMonth() + 1;
-  let dd = this.getDate();
-  return [this.getFullYear(), (mm > 9 ? '' : '0') + mm, (dd > 9 ? '' : '0') + dd].join('-');
-};
-
 class GdeslonApi {
 
   static STATUS_REJECTED = STATUS_REJECTED;
@@ -28,10 +22,16 @@ class GdeslonApi {
     this.apiLinksToken = apiLinksToken;
   }
 
+  toGdeslonFormatDate(timestamp) {
+    let mm = new Date(timestamp).getMonth() + 1;
+    let dd = new Date(timestamp).getDate();
+    return [new Date(timestamp).getFullYear(), (mm > 9 ? '' : '0') + mm, (dd > 9 ? '' : '0') + dd].join('-');
+  }
+
   async getLeadsByOfferId(dateFrom, dateTo, offerId = null, subAccount = null) {
     let params = {
       created_at: {
-        date: new Date(dateFrom).yyyymmdd(),
+        date: this.toGdeslonFormatDate(dateFrom),
         period: (dateTo - dateFrom) / (1000 * 3600 * 24)
       }
     };
@@ -51,8 +51,8 @@ class GdeslonApi {
         item.offerName = item.merchant_name;
         item.status = this.getLeadStatus(item.state);
         item.commission = Number(item.partner_payment);
-        item.leadTimestamp = new Date(item.created_at).valueOf();
-        item.saleTimestamp = new Date(item.confirmed_at).valueOf();
+        item.leadTime = new Date(item.created_at).valueOf();
+        item.uploadTime = new Date(item.confirmed_at).valueOf();
       });
       return result;
     }
@@ -104,12 +104,12 @@ class GdeslonApi {
     let apiData = await this.getLeadsByOfferId(dateFrom, dateTo, offerId);
     let commissionOpen = 0;
     let commissionApproved = 0;
-    let commissionCancelled = 0;
+    let commissionRejected = 0;
     let paid = 0;
     for (let item of apiData) {
       switch (item.status) {
         case STATUS_REJECTED:
-          commissionCancelled = Number((commissionCancelled + item.commission).toFixed(2));
+          commissionRejected = Number((commissionRejected + item.commission).toFixed(2));
           break;
         case STATUS_OPEN:
         case STATUS_HOLD:
@@ -123,7 +123,7 @@ class GdeslonApi {
           break;
       }
     }
-    return {commissionOpen, commissionApproved, commissionCancelled, paid};
+    return {commissionRejected, commissionOpen, commissionApproved, paid};
   }
 
   async getOfferLinksByOfferId(offerId = null) {

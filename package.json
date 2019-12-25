@@ -1,13 +1,13 @@
 {
-  "name": "gdeslonapi",
-  "version": "1.0.2",
+  "name": "gdeslon-webmaster-api",
+  "version": "1.1.0",
   "main": "GdeslonApi.js",
   "description": "gdeslon.ru API integration",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nebaz/gdeslonApi.git"
+    "url": "https://github.com/nebaz/gdeslonWebmasterApi.git"
   },
-  "homepage": "http://github.com/nebaz/gdeslonApi",
+  "homepage": "http://github.com/nebaz/gdeslonWebmasterApi",
   "author": "Nebaz <nebaz@ya.ru>",
   "license": "MIT",
   "dependencies": {
