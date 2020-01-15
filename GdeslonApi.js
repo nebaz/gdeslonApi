@@ -28,7 +28,7 @@ class GdeslonApi {
     return [new Date(timestamp).getFullYear(), (mm > 9 ? '' : '0') + mm, (dd > 9 ? '' : '0') + dd].join('-');
   }
 
-  async getLeadsByOfferId(dateFrom, dateTo, offerId = null, subAccount = null) {
+  async getLeadsByOfferId(dateFrom, dateTo, offerId = null, channelId = null, subAccount = null) {
     let params = {
       created_at: {
         date: this.toGdeslonFormatDate(dateFrom),
