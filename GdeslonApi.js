@@ -64,7 +64,7 @@ class GdeslonApi {
    * @return items{offerId,clickCount,leadsOpen}
    */
   async getStatisticsOffersByOfferId(dateFrom, dateTo, offerId = null, subAccount = null) {
-    let apiData = await this.getLeadsByOfferId(dateFrom, dateTo, offerId, subAccount);
+    let apiData = await this.getLeadsByOfferId(dateFrom, dateTo, offerId, null, subAccount);
     if (apiData && Array.isArray(apiData)) {
       let result = {
         offerId: offerId,
