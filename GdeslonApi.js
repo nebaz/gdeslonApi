@@ -51,8 +51,8 @@ class GdeslonApi {
         item.offerName = item.merchant_name;
         item.status = this.getLeadStatus(item.state);
         item.commission = Number(item.partner_payment);
-        item.leadTime = new Date(item.created_at).valueOf();
-        item.uploadTime = new Date(item.confirmed_at).valueOf();
+        item.leadTime = item.created_at ? new Date(item.created_at).valueOf() : null;
+        item.uploadTime = item.confirmed_at ? new Date(item.confirmed_at).valueOf() : null;
       });
       return result;
     }
