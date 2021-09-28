@@ -14,12 +14,13 @@ npm install --save gdeslonapi
 
 ## Usage
     const GdeslonApi = require('gdeslonapi');
-    const api = new GdeslonApi(wmId, ordersApiToken, linksApiToken);
-    let links = await api.getOfferLinksByOfferId();
+    const api = new GdeslonApi(wmId, ordersApiToken, xmlApiToken);
+    const links = await api.getOfferLinks();
 
 ## API
 * getLeadsByOfferId(timestamp dateFrom, timestamp dateTo, int offerId, string subAccount): Array< Object >
 * getStatisticsOffersByOfferId(timestamp dateFrom, timestamp dateTo, int offerId, string subAccount): Object
 * getWebmasterCommissions(timestamp dateFrom, timestamp dateTo, int offerId): Object
-* getOfferLinksByOfferId(int offerId): Array< Object >
+* getOfferLinks(int offerId): Array< Object >
+* getOfferLinkByOfferId(int offerId): String
 * apiRequest(params) - native gdeslon api request

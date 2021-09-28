@@ -16,10 +16,10 @@ class GdeslonApi {
   static STATUS_APPROVED = STATUS_APPROVED;
   static STATUS_PAID = STATUS_PAID;
 
-  constructor(username, password, apiLinksToken = '') {
+  constructor(username, password, xmlApiToken = '') {
     this.username = username;
     this.password = password;
-    this.apiLinksToken = apiLinksToken;
+    this.xmlApiToken = xmlApiToken;
   }
 
   toGdeslonFormatDate(timestamp) {
@@ -126,26 +126,33 @@ class GdeslonApi {
     return {commissionRejected, commissionOpen, commissionApproved, paid};
   }
 
-  async getOfferLinksByOfferId(offerId = null) {
-    let xml = await (await fetch(GDESLON_API_LINKS_URL + this.apiLinksToken)).text();
-    if (!this.apiLinksToken) {
+  async getOfferLinks(offerId = null) {
+    let xml = await (await fetch(GDESLON_API_LINKS_URL + this.xmlApiToken)).text();
+    if (!this.xmlApiToken) {
       throw new Error('no gdeslon token');
     }
     let parsedXml = await parseString(xml);
     let result = [];
-    for (let shop of parsedXml['gdeslon']['shops'][0]['shop']) {
-      let goto = shop['url'][0].replace('http://', 'https://');
-      let xmlOfferId = Number(shop['id'][0]);
-      if (offerId && offerId !== xmlOfferId) {
-        continue;
-      }
+    for (let shop of parsedXml['shops']['shop']) {
       result.push({
-        offerId: xmlOfferId,
-        offerLink: shop['affiliate-link'][0] + '&goto=' + goto,
+        offerId: Number(shop['id']),
+        offerLink: shop['affiliate-link'][0],
         shopName: shop['name'][0].toLowerCase()
       });
     }
     return result;
+  }
+
+  async getOfferLinkByOfferId(offerId) {
+    if (!offerId) {
+      return false;
+    }
+    let links = await this.getOfferLinks();
+    for (let link of links) {
+      if (offerId == link.offerId) {
+        return link.offerLink;
+      }
+    }
   }
 
   /**
